@@ -42,6 +42,9 @@ public:
 	Folder(string, Folder*);
 	Folder* getFolderUP();
 	Folder* getFolder(int);
+	File* getFile(int);
+	int getSizeFolders();
+	int getSizeFiles();
 	void addFolder(Folder);
 	void addFile(File);
 	void delFolder(string);

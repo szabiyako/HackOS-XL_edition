@@ -141,3 +141,17 @@ void SetCursor(int x, int y)
 	position.Y = y;
 	SetConsoleCursorPosition(hConsole, position);
 }
+
+/*Get cursor coords
+Coord = 'X' or 'Y'*/
+int GetCursor(char Coord)
+{
+	CONSOLE_SCREEN_BUFFER_INFO bi;
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bi);
+	if (Coord == 'X' || Coord == 'x')
+		return bi.dwCursorPosition.X;
+	else if (Coord == 'Y' || Coord == 'y')
+		return bi.dwCursorPosition.Y;
+	cerr << "GetCursor ERROR! Coord is incorrect!";
+	return 0;
+}

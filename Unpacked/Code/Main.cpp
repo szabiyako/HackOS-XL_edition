@@ -21,8 +21,11 @@ int main()
 	{
 		fs.emplace_back(FileSystem("PC"));
 		fs[0].setNow(fs[0].returnMain());
-		fs[0].returnMain()->addFolder(Folder("System", fs[0].returnMain()));
+		Folder s("System", fs[0].returnMain());
 		fs[0].setNow(fs[0].returnMain()->getFolder(0));
+		Folder f1("Folder_1", fs[0].returnNow());
+		File a1("NewFile.txt", fs[0].returnNow());
+		File a2("Test.txt", fs[0].returnNow());
 	}
 	while (0);
 	//importFileSystems(fs, (string)"fileSystem.data");

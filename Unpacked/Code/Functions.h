@@ -24,13 +24,17 @@ return false - cancel*/
 bool shutdownSystem(int);
 
 /*Print Cursor*/
-void cursor(vector <FileSystem>&, int);
+void cursor(vector <FileSystem>&, int, int);
 
 /*Console functon*/
 void console(vector <FileSystem>&, int, int);
 
-/*Return input to console*/
-string inputConsole();
+/*Return input to console
+(Remove free spaces from left and right)*/
+string inputConsole(istream&);
+
+/*Remove free spaces from left and right*/
+string inputCutSpaces(string);
 
 /*Commands function
 input - inputConsole()
@@ -39,5 +43,8 @@ return -1 - exit
 return 0 - endl
 return 1 - no endl*/
 int command(string);
+
+/*Same, but has more features*/
+int command(string, vector <FileSystem>&, int, int);
 
 #endif

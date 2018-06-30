@@ -97,6 +97,7 @@ Folder::Folder(string Name, Folder *OutsideFolderName)
 {
 	this->Name = Name;
 	FolderUP = OutsideFolderName;
+	OutsideFolderName->addFolder(*this);
 }
 Folder* Folder::getFolderUP()
 {
@@ -106,6 +107,19 @@ Folder* Folder::getFolder(int i)
 {
 	Folder *pf = &Folders[i];
 	return pf;
+}
+File* Folder::getFile(int i)
+{
+	File *pf = &Files[i];
+	return pf;
+}
+int Folder::getSizeFolders()
+{
+	return Folders.size();
+}
+int Folder::getSizeFiles()
+{
+	return Files.size();
 }
 void Folder::addFolder(Folder NewInsideFolder)
 {
@@ -192,8 +206,8 @@ void FileSystem::setNow(Folder* newNow)
 }
 void FileSystem::outPoz()
 {
-	string s1 = "", s2 = "", buff = "";
 	Folder *p = now;
+	vector <string> path;
 	if (p->getFolderUP() == NULL)
 	{
 		cout << p->getName();
@@ -201,15 +215,17 @@ void FileSystem::outPoz()
 	}
 	while (p->getFolderUP() != NULL)
 	{
-		s1 = "";
-		buff = p->getName();
+		path.push_back(p->getName());
 		p = p->getFolderUP();
-		s1 = p->getName();
-		s1 += '/';
-		s1 += buff;
-		s2 = s1;
 	}
-	cout << s2;
+	path.push_back(p->getName());
+	string output;
+	for (int i = path.size() - 1; i >= 0; i--)
+	{
+		output += path[i] + '/';
+	}
+	output.pop_back();
+	cout << output;
 }
 
 /*
