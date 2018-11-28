@@ -2,6 +2,7 @@
 
 
 ## Changes
+* now project is created using visual studio
 * add File System support
 * new bootScreen
 * bugfixes
