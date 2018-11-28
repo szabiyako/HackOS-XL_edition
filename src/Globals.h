@@ -9,6 +9,7 @@
 #include <tchar.h>
 #include <ctime>
 #include <conio.h>
+#include <cassert>
 //#include <sstream>
 
 #define tic 100
@@ -50,5 +51,26 @@ void SetCursor(int, int);
 /*Get cursor coords
 Coord = 'X' or 'Y'*/
 int GetCursor(char Coord);
+
+/*Return random number from 1,
+to input*/
+unsigned short int random(unsigned short int);
+
+/*Selectable menu, from vector <string>
+on position on screen int, int,
+unsigned short int - already selected
+return -1 - Escape
+return int - index vector <sting>*/
+int ChooseVertical(vector <string>, int, int, unsigned short int, bool);
+
+/*Selectable menu, from vector <string>
+on position on screen int, int,
+unsigned short int - already selected
+return int - index vector <sting>*/
+int ChooseVerticalNoEscape(vector <string>, int, int, unsigned short int, bool);
+
+/*Render already selected ChooseVerical(...)
+if last int = -1 No selected*/
+void ChooseVerticalRender(vector <string>, int, int, int);
 
 #endif

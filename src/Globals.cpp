@@ -121,7 +121,10 @@ int Color(string c)
 		return green;
 	}
 	else
+	{
 		cerr << endl << "ERROR:WRONG COLOR INPUT!";
+		assert(false);
+	}
 	return white;
 
 	//test
@@ -153,5 +156,163 @@ int GetCursor(char Coord)
 	else if (Coord == 'Y' || Coord == 'y')
 		return bi.dwCursorPosition.Y;
 	cerr << "GetCursor ERROR! Coord is incorrect!";
+	assert(false);
 	return 0;
+}
+
+/*Return random number from 1,
+to input*/
+unsigned short int random(unsigned short int c)
+{
+	srand(time(0));
+	return 1 + rand() % c;
+}
+
+/*Selectable menu, from vector <string>
+on position on screen int, int,
+unsigned short int - already selected
+return -1 - Escape
+return int - index vector <sting>*/
+int ChooseVertical(vector <string> v, int x, int y, unsigned short int wasChosen, bool includeArrows)
+{
+	int cy = wasChosen;
+	ShowConsoleCursor(false);
+	for (int i = 0; i < v.size(); i++)
+	{
+		SetCursor(x + 2, y + i);
+		cout << v[i];
+	}
+	SetCursor(x, cy + y);
+	cout << '>';
+	while (true)
+	{
+		int key;
+		key = _getch();
+		if (key == VK_RETURN || (key == 77 && includeArrows))
+		{
+			ShowConsoleCursor(true);
+			return cy;
+		}
+		else if (key == VK_ESCAPE || (key == 75 && includeArrows))
+		{
+			ShowConsoleCursor(true);
+			return -1;
+		}
+		else
+		{
+			switch (key)
+			{
+			case 72:
+				if (cy > 0)
+				{
+					cout << "\b ";
+					cy--;
+				}
+				else
+				{
+					cout << "\b ";
+					cy = v.size() - 1;
+				}
+				break; //UP
+
+			case 80:
+				if (cy < v.size() - 1)
+				{
+					cout << "\b ";
+					cy++;
+				}
+				else
+				{
+					cout << "\b ";
+					cy = 0;
+				}
+				break; //DOWN
+			}
+			SetCursor(x, cy + y);
+			cout << '>';
+		}
+	}
+	//if error return -10
+	return -10;
+}
+
+/*Selectable menu, from vector <string>
+on position on screen int, int,
+unsigned short int - already selected
+return int - index vector <sting>*/
+int ChooseVerticalNoEscape(vector <string> v, int x, int y, unsigned short int wasChosen, bool includeArrows)
+{
+	int cy = wasChosen;
+	ShowConsoleCursor(false);
+	for (int i = 0; i < v.size(); i++)
+	{
+		SetCursor(x + 2, y + i);
+		cout << v[i];
+	}
+	SetCursor(x, cy + y);
+	cout << '>';
+	while (true)
+	{
+		int key;
+		key = _getch();
+		if (key == VK_RETURN || (key == 77 && includeArrows))
+		{
+			ShowConsoleCursor(true);
+			return cy;
+		}
+		else
+		{
+			switch (key)
+			{
+			case 72:
+				if (cy > 0)
+				{
+					cout << "\b ";
+					cy--;
+				}
+				else
+				{
+					cout << "\b ";
+					cy = v.size() - 1;
+				}
+				break; //UP
+
+			case 80:
+				if (cy < v.size() - 1)
+				{
+					cout << "\b ";
+					cy++;
+				}
+				else
+				{
+					cout << "\b ";
+					cy = 0;
+				}
+				break; //DOWN
+			}
+			SetCursor(x, cy + y);
+			cout << '>';
+		}
+	}
+	//if error return -10
+	return -10;
+}
+
+/*Render already selected ChooseVerical(...)
+if last int = -1 No selected*/
+void ChooseVerticalRender(vector <string> v, int x, int y, int wasChosen)
+{
+	int cy = wasChosen;
+	ShowConsoleCursor(false);
+	for (int i = 0; i < v.size(); i++)
+	{
+		SetCursor(x + 2, y + i);
+		cout << v[i];
+	}
+	if (wasChosen > -1)
+	{
+		SetCursor(x, cy + y);
+		cout << '>';
+	}
+	ShowConsoleCursor(true);
 }
