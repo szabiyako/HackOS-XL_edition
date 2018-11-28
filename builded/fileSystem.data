@@ -1,0 +1,27 @@
+/********************************
+*       <FS> - FileSystem       *
+*       <F> - folder            *
+*       <-> - file              *
+*       "_"; - typefile         *
+*       "_" - Contentfile       *
+*       { - begin               *
+*       } - end                 *
+********************************/
+..
+<FS>Main>
+{
+	<F>System>
+	{
+		<->boot.df>
+		{
+			"text";
+			"12345\n678"
+		}
+		<->GUI.exe>{}
+		<->End.gg>{}
+		<F>Folder>
+		{
+		}
+	}
+	<->File.rip>{}
+}
