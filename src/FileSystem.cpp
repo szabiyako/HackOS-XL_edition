@@ -163,7 +163,8 @@ int Folder::checkFile(string FileName)
 	bool Continue = true;
 	for (unsigned int i = 0; i < Files.size() && Continue; i++)
 	{
-		if (Files[i].getName() == FileName)
+		if (Files[i].getName() == FileName || 
+			(Files[i].getName() + '.' + Files[i].getType()) == FileName)
 		{
 			Continue = false;
 			return i;

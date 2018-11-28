@@ -1,17 +1,3 @@
-/*
-888    888                   888       .d88888b.   .d8888b.       Y88b   d88P 888
-888    888                   888      d88P" "Y88b d88P  Y88b       Y88b d88P  888
-888    888                   888      888     888 Y88b.             Y88o88P   888
-8888888888  8888b.   .d8888b 888  888 888     888  "Y888b.           Y888P    888
-888    888     "88b d88P"    888 .88P 888     888     "Y88b.         d888b    888
-888    888 .d888888 888      888888K  888     888       "888 888888 d88888b   888
-888    888 888  888 Y88b.    888 "88b Y88b. .d88P Y88b  d88P       d88P Y88b  888
-888    888 "Y888888  "Y8888P 888  888  "Y88888P"   "Y8888P"       d88P   Y88b 88888888
-
-ascii Colossal
-http://patorjk.com/software/taag/#p=display&f=Colossal&t=HackOS-XL
-*/
-
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
@@ -30,7 +16,7 @@ http://patorjk.com/software/taag/#p=display&f=Colossal&t=HackOS-XL
 using namespace std;
 
 /*Version OS*/
-const string veros = "0.3a";
+const string veros = "0.4.2a";
 const unsigned int License_code = 203233;
 /*Version OS*/
 

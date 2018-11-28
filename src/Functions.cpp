@@ -384,7 +384,6 @@ bool shutdownSystem(int type)
 /*Print Cursor*/
 void cursor(vector <FileSystem> &fs, int pfs, int stage)
 {
-	//cout << endl;
 	Color("purple");
 	fs[pfs].outPoz(); 
 	Color("dark_green");
@@ -455,7 +454,6 @@ string inputCutSpaces(string input)
 	}
 	return input;
 }
-
 
 /*Commands function
 input - inputConsole()
@@ -529,12 +527,6 @@ int command(string input)
 		system("cls");
 		cout << "HackOS-XL_Edition " << veros << "\n\n";
 	}
-	else if (input == "?" || 
-		input == "help" || input == "Help")
-	{
-		cout << "help is empty now, sorry =)";
-		return endline;
-	}
 	else if (input.find("connect ") == 0)
 	{
 		string IP;
@@ -560,6 +552,13 @@ int command(string input)
 	return no_endl;
 }
 
+/*Same, but has more features*/
+/*Commands function
+input - inputConsole()
+-doing commands
+return -1 - exit
+return 0 - endl
+return 1 - no_endl*/
 int command(string input, vector <FileSystem>& fs, int pfs, int stage)
 {
 	enum
@@ -570,6 +569,35 @@ int command(string input, vector <FileSystem>& fs, int pfs, int stage)
 	};
 	if (input.size() == 0)
 		return no_endl;
+
+	//Open file
+	if (true)
+	{
+		string copy;
+		bool atNow = false;
+		if (input.find("./") == 0)
+		{
+			copy = input;
+			copy.erase(0, 2);
+			copy = inputCutSpaces(copy);
+			atNow = true;
+		}
+		if (atNow)
+		{
+			int filePoz = fs[pfs].returnNow()->checkFile(copy);
+			if (filePoz == -1)
+			{
+				cout << "Wrong file name";
+				return endline;
+			}
+			cout << fs[pfs].returnNow()->getFile(filePoz)->getContent();
+			return endline;
+		}
+		else
+		{
+
+		}
+	}
 
 	if (input == "exit" || input == "shutdown")
 	{
@@ -590,19 +618,74 @@ int command(string input, vector <FileSystem>& fs, int pfs, int stage)
 				cout << "There is no higher directory" << endl;
 			}
 		}
-		else if (input.find("./") == 0)
-		{
-			input.erase(0, 2);
-			int numberFolder = fs[pfs].returnNow()->checkFolder(input);
-			if (numberFolder == -1)
-				cout << "Folder not found" << endl;
-			else
-			{
-				fs[pfs].setNow(fs[pfs].returnNow()->getFolder(numberFolder));
-			}
-		}
 		else if (input == ".")
 			return no_endl;
+		else
+		{
+			bool atNow = false;
+			if (input.find("./") == 0)
+			{
+				input.erase(0, 2);
+				atNow = true;
+			}
+			string folder;
+			string cpinput = input;
+			Folder* pfolder = fs[pfs].returnNow();
+			while (input.size() > 0)
+			{
+				folder = "";
+				for (unsigned int i = 0; i < input.size() && input[i] != '/'; )
+				{
+					folder += input[i];
+					input.erase(0, 1);
+				}
+				if (input.size() > 0)
+					input.erase(0, 1);
+				folder = inputCutSpaces(folder);
+				int numberFolder = pfolder->checkFolder(folder);
+				if (numberFolder == -1)
+				{
+					if (atNow)
+					{
+						cout << "Folder not found" << endl;
+						return no_endl;
+					}
+					else
+					{
+						pfolder = fs[pfs].returnMain();
+						while (cpinput.size() > 0)
+						{
+							folder = "";
+							for (unsigned int i = 0; i < cpinput.size() && cpinput[i] != '/'; )
+							{
+								folder += cpinput[i];
+								cpinput.erase(0, 1);
+							}
+							if (cpinput.size() > 0)
+								cpinput.erase(0, 1);
+							folder = inputCutSpaces(folder);
+							int numberFolder = pfolder->checkFolder(folder);
+							if (numberFolder == -1)
+							{
+								cout << "Folder not found" << endl;
+								return no_endl;
+							}
+							else
+							{
+								pfolder = pfolder->getFolder(numberFolder);
+							}
+						}
+						fs[pfs].setNow(pfolder);
+						return no_endl;
+					}
+				}
+				else
+				{
+					pfolder = pfolder->getFolder(numberFolder);
+				}
+			}
+			fs[pfs].setNow(pfolder);
+		}
 		return no_endl;
 	}
 	else if (input == "help" || input == "Help" || input == "?")
@@ -622,6 +705,7 @@ int command(string input, vector <FileSystem>& fs, int pfs, int stage)
 		cout << " connect IP         - Connect to the next IP" << endl;
 		cout << " download name_file - Downloads the file with name name_file" << endl;
 		cout << " cls / clear        - Clear screen";
+		cout << " reset              - Reset filesystem, debug only";
 		return endline;
 	}
 	else if (input.find("echo ") == 0)
@@ -641,6 +725,8 @@ int command(string input, vector <FileSystem>& fs, int pfs, int stage)
 	{
 		shutdownSystem(0);
 		int typeboot = 1;
+		pfs = 0;
+		fs[pfs].setNow(fs[pfs].returnMain());
 		bootSystem(typeboot);
 		ShowConsoleCursor(true);
 	}
@@ -648,12 +734,6 @@ int command(string input, vector <FileSystem>& fs, int pfs, int stage)
 	{
 		system("cls");
 		cout << "HackOS-XL_Edition " << veros << "\n\n";
-	}
-	else if (input == "?" ||
-		input == "help" || input == "Help")
-	{
-		cout << "help is empty now, sorry =)";
-		return endline;
 	}
 	else if (input.find("connect ") == 0)
 	{
@@ -671,12 +751,82 @@ int command(string input, vector <FileSystem>& fs, int pfs, int stage)
 	else if (input == "ls")
 	{
 		Color("grey");
-		for (int i = 0; i < fs[pfs].returnNow()->getSizeFolders(); i++)
+		int folder_size = fs[pfs].returnNow()->getSizeFolders();
+		int file_size = fs[pfs].returnNow()->getSizeFiles();
+		if (folder_size == 0 && file_size == 0)
+		{
+			Color("green");
+			cout << "Folder is empty" << endl;
+			return no_endl;
+		}
+		for (int i = 0; i < folder_size; i++)
 			cout << fs[pfs].returnNow()->getFolder(i)->getName() << endl;
 		Color("white");
-		for (int i = 0; i < fs[pfs].returnNow()->getSizeFiles(); i++)
+		for (int i = 0; i < file_size; i++)
 			cout << fs[pfs].returnNow()->getFile(i)->getName() << '.'
 			<< fs[pfs].returnNow()->getFile(i)->getType() << endl;
+		return no_endl;
+	}
+
+	///DEBUG ONLY
+	else if (input == "reset")
+	{
+		ShowConsoleCursor(false);
+		fs.clear();
+		fs.emplace_back(FileSystem("PC"));
+		fs[0].setNow(fs[0].returnMain());
+		Folder s("System", fs[0].returnMain());
+		Folder md("MyDoc", fs[0].returnMain());
+		Folder d("Download", fs[0].returnMain());
+		fs[0].setNow(fs[0].returnMain()->getFolder(0));
+		Folder f1("Folder_1", fs[0].returnNow());
+		File a1("NewFile.txt", fs[0].returnNow());
+		fs[0].returnNow()->getFile(0)->setContent("NewFile.txt nice to meet you!");
+		File a2("Test.txt", fs[0].returnNow());
+		fs[0].returnNow()->getFile(1)->setContent("There is nothing here dude!");
+		fs[0].setNow(fs[0].returnMain()->getFolder(1));
+		Folder w("Work", fs[0].returnNow());
+		fs[0].setNow(fs[0].returnMain());
+		for (int i = 1; i <= 5; i++)
+		{
+			system("cls");
+			cout << "\n\n\n\n                Reset \\";
+			Sleep(tic / 3);
+			system("cls");
+			cout << "\n\n\n\n                Reset |";
+			Sleep(tic / 3);
+			system("cls");
+			cout << "\n\n\n\n                Reset /";
+			Sleep(tic / 3);
+			system("cls");
+			cout << "\n\n\n\n                Reset -";
+			Sleep(tic / 3);
+		}
+		pfs = 0;
+		fs[pfs].setNow(fs[pfs].returnMain());
+		system("cls");
+		cout << "\n\n\n\n                Done";
+		Sleep(tic * 10);
+		system("cls");
+		cout << "HackOS-XL_Edition " << veros;
+		cout << "\n\nIf you a new user, please use command: \"help\" or \"?\"";
+		cout << endl;
+		ShowConsoleCursor(true);
+	}
+	///DEBUG ONLY
+
+	//Somthing wrong
+	else if (input.find("mkdir ") == 0)
+	{
+		input.erase(0, 6);
+		input = inputCutSpaces(input);
+		if (fs[pfs].returnNow()->checkFolder(input) == -1)
+		{
+			Folder newfolder(input, fs[pfs].returnNow());
+		}
+		else
+			cout << "This folder already exist" << endl;
+		return no_endl;
 	}
 	else
 	{

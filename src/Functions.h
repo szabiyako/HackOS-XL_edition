@@ -7,7 +7,7 @@
 /*Checking for files
 return 0 - Error
 return 1 - Done
-return 2 - loadimage.data Error (Done)*/
+return 2 - loadimage Error (Done)*/
 int checkFiles();
 
 /*LoadScreen
@@ -41,10 +41,16 @@ input - inputConsole()
 -doing commands
 return -1 - exit
 return 0 - endl
-return 1 - no endl*/
+return 1 - no_endl*/
 int command(string);
 
 /*Same, but has more features*/
+/*Commands function
+input - inputConsole()
+-doing commands
+return -1 - exit
+return 0 - endl
+return 1 - no_endl*/
 int command(string, vector <FileSystem>&, int, int);
 
 #endif
